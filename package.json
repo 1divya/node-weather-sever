@@ -6,6 +6,10 @@
   "scripts": {
     "start":"node app.js"
   },
+  "dependencies":{
+    "express":"*",
+    "body-parser":"*"
+  }
   "keywords": [],
   "author": "",
   "license": "ISC"
