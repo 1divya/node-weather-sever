@@ -1,25 +1,28 @@
 const express = require('express');
 const app = express();
+const port = process.env.PORT || 3000;
 const gelocation = require('./geolocation.js');
 const weather = require('./weather.js');
 
 app.get('/weather',(req,res)=>{
 	if(!req.query.place){
-		return res.send('Please send a place in your request');
+		return res.send({
+			"error":"Please send a place in your request"
+		});
 	}
 	const place = req.query.place;
 	gelocation(place,(error,{latitude,longitude,location}={})=>{ // here destructuring of object 
 		// and default parameter is also used as {}
 		if(error){
-			console.log("Error:"+error);
-			return res.send("Getting Error: "+error);
+			//console.log("Error:"+error);
+			return res.send({"error":error});
 		}else{
 			weather(latitude,longitude,(error,data)=>{
 				if(error){
-					console.log(error);
-					return res.send("Getting Error: "+error);
+					//console.log(error);
+					return res.send({"error":error});
 				}else{
-					console.log(data);
+					//console.log(data);
 					res.send(data);
 				}
 			});
@@ -28,7 +31,7 @@ app.get('/weather',(req,res)=>{
 })
 
 app.get('*',(req,res)=>{
-	res.send('Error 404: Page Not found');
+	res.send({"error":"404: Page Not found"});
 })
 
 /*const place = process.argv[2];
@@ -50,4 +53,4 @@ if(place === undefined){
 		}
 	});
 }*/
-app.listen(3000,()=>{console.log('app is listening on port 3000');})
+app.listen(port,()=>{console.log('app is listening on port '+port);})
